@@ -1,0 +1,11 @@
+COUNTING COOCCURRENCES
+window size: 4
+context: symmetric
+max product: 1019405
+overflow length: 2376772
+Reading vocab from file "vocab.txt"...loaded 55 words.
+Building lookup table...table contains 3026 elements.
+Processing token: 0[0GProcessed 33000 tokens.
+Writing cooccurrences to disk....2 files in total.
+Merging cooccurrence files: processed 0 lines.[39G0 lines.[0GMerging cooccurrence files: processed 425 lines.
+
