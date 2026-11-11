@@ -1,0 +1,21 @@
+# Compiled binaries and objects
+build/
+*.o
+*.obj
+*.exe
+
+# Large datasets (GitHub rejects files > 100MB)
+text8
+text8.zip*
+
+# Binary vector dumps and cooccurrence matrix files
+*.bin
+vectors.bin
+cooccurrence.bin
+cooccurrence.shuf.bin
+
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/

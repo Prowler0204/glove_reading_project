@@ -4,8 +4,14 @@
 set -euo pipefail
 MODE="${1:-tiny}"
 if [[ ! -f src/glove.c || ! -f Makefile ]]; then
-  echo 'ERROR: Run this script inside the stanfordnlp/GloVe repository root.' >&2
-  exit 1
+  if [[ -d GloVe && -f GloVe/src/glove.c && -f GloVe/Makefile ]]; then
+    echo "Switching into GloVe repository directory..."
+    cd GloVe
+    cp -u ../probe_vectors.py . 2>/dev/null || true
+  else
+    echo 'ERROR: Run this script inside the stanfordnlp/GloVe repository root.' >&2
+    exit 1
+  fi
 fi
 
 if [[ "$MODE" == "tiny" ]]; then

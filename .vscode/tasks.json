@@ -1,0 +1,60 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run GloVe (tiny)",
+      "type": "shell",
+      "command": "D:\\msys2\\usr\\bin\\bash.exe",
+      "args": [
+        "--login",
+        "-c",
+        "cd /d/Codes/ANLP/reading_project/GloVe && bash run_glove_local.sh tiny"
+      ],
+      "options": {
+        "env": {
+          "CHERE_INVOKING": "1",
+          "MSYS2_PATH_TYPE": "inherit"
+        }
+      },
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Run GloVe (text8)",
+      "type": "shell",
+      "command": "D:\\msys2\\usr\\bin\\bash.exe",
+      "args": [
+        "--login",
+        "-c",
+        "cd /d/Codes/ANLP/reading_project/GloVe && bash run_glove_local.sh text8"
+      ],
+      "options": {
+        "env": {
+          "CHERE_INVOKING": "1",
+          "MSYS2_PATH_TYPE": "inherit"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Probe GloVe Vectors",
+      "type": "shell",
+      "command": "D:\\msys2\\usr\\bin\\bash.exe",
+      "args": [
+        "--login",
+        "-c",
+        "cd /d/Codes/ANLP/reading_project/GloVe && python3 probe_vectors.py vectors.txt king queen paris london"
+      ],
+      "options": {
+        "env": {
+          "CHERE_INVOKING": "1",
+          "MSYS2_PATH_TYPE": "inherit"
+        }
+      },
+      "problemMatcher": []
+    }
+  ]
+}
