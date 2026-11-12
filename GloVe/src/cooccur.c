@@ -32,7 +32,7 @@
 typedef struct cooccur_rec_id {
     int word1;
     int word2;
-    real val;
+    real val; //coourrence value
     int id;
 } CRECID;
 
@@ -46,7 +46,7 @@ int distance_weighting = 1; // Flag to control the distance weighting of cooccur
 char *vocab_file, *file_head;
 
 /* Search hash table for given string, return record if found, else NULL */
-HASHREC *hashsearch(HASHREC **ht, char *w) {
+HASHREC *hashsearch(HASHREC **ht, char *w) { // search for a word in the vocab hash table
     HASHREC     *htmp, *hprv;
     unsigned int hval = HASHFN(w, TSIZE, SEED);
     for (hprv = NULL, htmp=ht[hval]; htmp != NULL && scmp(htmp->word, w) != 0; hprv = htmp, htmp = htmp->next);
@@ -59,7 +59,7 @@ HASHREC *hashsearch(HASHREC **ht, char *w) {
 }
 
 /* Insert string in hash table, check for duplicates which should be absent */
-void hashinsert(HASHREC **ht, char *w, long long id) {
+void hashinsert(HASHREC **ht, char *w, long long id) { // stores vacab id, instead of freq. count, like in the vocab_count.c
     HASHREC     *htmp, *hprv;
     unsigned int hval = HASHFN(w, TSIZE, SEED);
     for (hprv = NULL, htmp = ht[hval]; htmp != NULL && scmp(htmp->word, w) != 0; hprv = htmp, htmp = htmp->next);
@@ -77,7 +77,7 @@ void hashinsert(HASHREC **ht, char *w, long long id) {
 }
 
 /* Write sorted chunk of cooccurrence records to file, accumulating duplicate entries */
-int write_chunk(CREC *cr, long long length, FILE *fout) {
+int write_chunk(CREC *cr, long long length, FILE *fout) { // combine duplicate co-occurrence pairs and write results to a temp. binary file
     if (length == 0) return 0;
 
     long long a = 0;
@@ -161,7 +161,7 @@ int merge_write(CRECID new, CRECID *old, FILE *fout) {
 }
 
 /* Merge [num] sorted files of cooccurrence records */
-int merge_files(int num) {
+int merge_files(int num) { // merge all the sorted temp. co-occurence files into one final file, combining duplicate word pairs across those files
     int i, size;
     long long counter = 0;
     CRECID *pq, new, old;
@@ -219,7 +219,7 @@ int merge_files(int num) {
     return 0;
 }
 
-void free_resources(HASHREC** vocab_hash, CREC *cr, long long *lookup, 
+void free_resources(HASHREC** vocab_hash, CREC *cr, long long *lookup,  // release the memory allocated by cooccur.c
                     long long *history, real *bigram_table) {
     free_table(vocab_hash);
     free(cr);
@@ -229,7 +229,7 @@ void free_resources(HASHREC** vocab_hash, CREC *cr, long long *lookup,
 }
 
 /* Collect word-word cooccurrence counts from input stream */
-int get_cooccurrence(void) {
+int get_cooccurrence(void) { // read the corpus, identify words appearing near each other, caln their weighted co-occurence values, and prepare the records for storage
     int flag, x, y, fidcounter = 1;
     long long a, j = 0, k, id, counter = 0, ind = 0, vocab_size, w1, w2, *lookup = NULL, *history = NULL;
     char format[20], filename[200], str[MAX_STRING_LENGTH + 1];
@@ -319,12 +319,12 @@ int get_cooccurrence(void) {
         }
         counter++;
         if ((counter%100000) == 0) if (verbose > 1) fprintf(stderr,"\033[19G%lld",counter);
-        htmp = hashsearch(vocab_hash, str);
+        htmp = hashsearch(vocab_hash, str); // find current word in the vocab
         if (htmp == NULL) {
             if (verbose > 2) fprintf(stderr, "Not getting coocurs as word not in vocab\n");
             continue; // Skip out-of-vocabulary words
         }
-        w2 = htmp->num; // Target word (frequency rank)
+        w2 = htmp->num; // Target word (frequency rank) {retrieve vocab id}
         for (k = j - 1; k >= ( (j > window_size) ? j - window_size : 0 ); k--) { // Iterate over all words to the left of target word, but not past beginning of line
             w1 = history[k % window_size]; // Context word (frequency rank)
             if (verbose > 2) fprintf(stderr, "Adding cooccur between words %lld and %lld.\n", w1, w2);
@@ -364,7 +364,7 @@ int get_cooccurrence(void) {
             j = (long long) (0.75*log(vocab_size / x));
             if (verbose > 1) fprintf(stderr,".");
         } // log's to make it look (sort of) pretty
-        for (y = 1; y <= (lookup[x] - lookup[x-1]); y++) {
+        for (y = 1; y <= (lookup[x] - lookup[x-1]); y++) { // declares and allocate variables
             if ((r = bigram_table[lookup[x-1] - 2 + y]) != 0) {
                 fwrite(&x, sizeof(int), 1, fid);
                 fwrite(&y, sizeof(int), 1, fid);
@@ -386,7 +386,7 @@ int main(int argc, char **argv) {
     vocab_file = malloc(sizeof(char) * MAX_STRING_LENGTH);
     file_head = malloc(sizeof(char) * MAX_STRING_LENGTH);
     
-    if (argc == 1) {
+    if (argc == 1) { // display help
         printf("Tool to calculate word-word cooccurrence statistics\n");
         printf("Author: Jeffrey Pennington (jpennin@stanford.edu)\n\n");
         printf("Usage options:\n");
