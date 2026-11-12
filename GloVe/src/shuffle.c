@@ -37,7 +37,7 @@ char *file_head; // temporary file string
 real memory_limit = 2.0; // soft limit, in gigabytes
 
 /* Generate uniformly distributed random long ints */
-static long rand_long(long n) {
+static long rand_long(long n) { // generate a random integer betw 0 and n-1, with each possible integer having equal probability
     long limit = LRAND_MAX - LRAND_MAX % n;
     long rnd;
     do {
@@ -47,14 +47,14 @@ static long rand_long(long n) {
 }
 
 /* Write contents of array to binary file */
-int write_chunk(CREC *array, long size, FILE *fout) {
+int write_chunk(CREC *array, long size, FILE *fout) { // take an array of co-occurence records and write them into a binary file 
     long i = 0;
     for (i = 0; i < size; i++) fwrite(&array[i], sizeof(CREC), 1, fout);
     return 0;
 }
 
 /* Fisher-Yates shuffle */
-void shuffle(CREC *array, long n) {
+void shuffle(CREC *array, long n) { // randomly rearrange the co-occurence records inside an array without changing their values
     long i, j;
     CREC tmp;
     for (i = n - 1; i > 0; i--) {
@@ -66,7 +66,7 @@ void shuffle(CREC *array, long n) {
 }
 
 /* Merge shuffled temporary files; doesn't necessarily produce a perfect shuffle, but good enough */
-int shuffle_merge(int num) {
+int shuffle_merge(int num) { // reads records from mutliple shuffled temp files, mix them together, shuffle them again, and write the final shufflesd outputs
     long i, j, k, l = 0;
     int fidcounter = 0;
     CREC *array;
