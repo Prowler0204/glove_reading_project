@@ -31,16 +31,17 @@
 
 typedef struct vocabulary {
     char *word;
-    long long count;
+    long long count; 
 } VOCAB;
 
-int verbose = 2; // 0, 1, or 2
-long long min_count = 1; // min occurrences for inclusion in vocab
+//global variables
+int verbose = 2; // 0, 1, or 2 // how much info the prog. prints 
+long long min_count = 1; // min occurrences for inclusion in vocab  
 long long max_vocab = 0; // max_vocab = 0 for no limit
 
 
 /* Vocab frequency comparison; break ties alphabetically */
-int CompareVocabTie(const void *a, const void *b) {
+int CompareVocabTie(const void *a, const void *b) { //tells the sorting algo how to order the words, produces descending freq. order 
     long long c;
     if ( (c = ((VOCAB *) b)->count - ((VOCAB *) a)->count) != 0) return ( c > 0 ? 1 : -1 );
     else return (scmp(((VOCAB *) a)->word,((VOCAB *) b)->word));
@@ -48,14 +49,14 @@ int CompareVocabTie(const void *a, const void *b) {
 }
 
 /* Vocab frequency comparison; no tie-breaker */
-int CompareVocab(const void *a, const void *b) {
+int CompareVocab(const void *a, const void *b) { // if 2 words same freq, treat them equal for sorting purposes
     long long c;
     if ( (c = ((VOCAB *) b)->count - ((VOCAB *) a)->count) != 0) return ( c > 0 ? 1 : -1 );
     else return 0;
 }
 
 /* Search hash table for given string, insert if not found */
-void hashinsert(HASHREC **ht, char *w) {
+void hashinsert(HASHREC **ht, char *w) { // for every word, caln hash, search corresponding bucket, create new or add
     HASHREC     *htmp, *hprv;
     unsigned int hval = HASHFN(w, TSIZE, SEED);
     
@@ -84,7 +85,7 @@ void hashinsert(HASHREC **ht, char *w) {
     return;
 }
 
-int get_counts(void) {
+int get_counts(void) { // intialize hash table - read corpus - count freq. - build vocab array - sort vocab - apply filtering - print vocab
     long long i = 0, j = 0, vocab_size = 12500;
     // char format[20];
     char str[MAX_STRING_LENGTH + 1];
