@@ -142,7 +142,7 @@ void initialize_parameters(void) {
     }
 }
 
-static inline real check_nan(real update) {
+static inline real check_nan(real update) { // check whether a parameter update is a valid number, if NaN or infinity, replace the update with zero
     if (isnan(update) || isinf(update)) {
         fprintf(stderr,"\ncaught NaN in update");
         return 0.;
@@ -152,7 +152,7 @@ static inline real check_nan(real update) {
 }
 
 /* Train the GloVe model */
-void *glove_thread(void *vid) {
+void *glove_thread(void *vid) { // train glove - read co-occurence records - caln prediction error - compute gradients - update word vector using AdaGrad
     long long a, b ,l1, l2;
     long long id = *(long long*)vid;
     CREC cr;
